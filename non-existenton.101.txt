@@ -1,0 +1,69 @@
+function love.load()
+    -- GUI सेटअप
+    love.graphics.setBackgroundColor(0, 0, 0) -- कालो ब्याकग्राउन्ड
+    font = love.graphics.newFont(20) -- फन्ट सेट
+    love.graphics.setFont(font)
+
+    inputText = "" -- युजर इनपुटको लागि
+    isFocused = true -- इनपुट बक्स फोकसमा छ कि छैन भनेर
+    buttonHover = false -- बटन होभरको अवस्था
+end
+
+function love.textinput(t)
+    if isFocused then
+        inputText = inputText .. t -- युजर इनपुट थप्ने
+    end
+end
+
+function love.keypressed(key)
+    if isFocused and key == "backspace" then
+        -- ब्याकस्पेसले अन्तिम अक्षर हटाउने
+        inputText = inputText:sub(1, -2)
+    end
+end
+
+function love.mousepressed(x, y, button)
+    if button == 1 then
+        -- चेक गर्ने यदि इनपुट क्षेत्रमा क्लिक भयो भने
+        if x > 100 and x < 400 and y > 100 and y < 150 then
+            isFocused = true
+        else
+            isFocused = false
+        end
+
+        -- चेक गर्ने यदि बटनमा क्लिक भयो भने
+        if x > 150 and x < 300 and y > 200 and y < 250 then
+            print("Submitted: " .. inputText) -- इनपुट प्रिन्ट गर्ने
+        end
+    end
+end
+
+function love.draw()
+    -- टुप्पोमा टेक्स्ट
+    love.graphics.setColor(1, 1, 1) -- सेतो रंग
+    love.graphics.print("Non-existent.101hub", 10, 10)
+
+    -- इनपुट बक्स
+    love.graphics.rectangle("line", 100, 100, 300, 50)
+    love.graphics.print("Enter Key Here: " .. inputText, 110, 115)
+
+    -- सबमिट बटन
+    if buttonHover then
+        love.graphics.setColor(0.3, 0.3, 1) -- हल्का निलो रंग (होभरमा)
+    else
+        love.graphics.setColor(0, 0, 1) -- निलो रंग
+    end
+    love.graphics.rectangle("fill", 150, 200, 150, 50)
+    love.graphics.setColor(1, 1, 1) -- सेतो रंग
+    love.graphics.print("Submit", 180, 215)
+end
+
+function love.update(dt)
+    -- चेक गर्ने यदि माउस बटनमा होभर भएको छ भने
+    local x, y = love.mouse.getPosition()
+    if x > 150 and x < 300 and y > 200 and y < 250 then
+        buttonHover = true
+    else
+        buttonHover = false
+    end
+end
